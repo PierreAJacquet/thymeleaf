@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--ColHeader Fragment-->
+<th scope="col" th:fragment="colHeader(itemSortProperty, libelle)">
+    <div th:if="${#strings.equals(param.sortProperty,itemSortProperty)}"
+         th:switch="${param.sortDirection.toString()}">
+            <span th:case="'DESC'">
+                <span th:text="${libelle}"></span> <a
+                    th:href="|/?page=${page}&search=${search}&size=${size}&sortDirection=ASC&sortProperty=${itemSortProperty}|"><i
+                    class="fa fa-chevron-down"></i></a>
+            </span>
+        <span th:case="*">
+                <span th:text="${libelle}"></span> <a
+                th:href="|/?page=${page}&search=${search}&size=${size}&sortDirection=DESC&sortProperty=${itemSortProperty}|"><i
+                class="fa fa-chevron-up"></i></a>
+            </span>
+    </div>
+    <div th:if="${not #strings.equals(param.sortProperty, itemSortProperty)}">
+            <span>
+                 <a
+                         th:href="|/?page=${page}&search=${search}&size=${size}&sortDirection=ASC&sortProperty=${itemSortProperty}|"><span
+                         th:text="${libelle}"></span></a>
+            </span>
+    </div>
+</th>
+
+</body>
+</html>

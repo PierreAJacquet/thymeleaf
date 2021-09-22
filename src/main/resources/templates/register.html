@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Inscription')"></head>
+<body>
+<div th:replace="fragments/header :: navbar"></div>
+
+<div>
+    <div class="container">
+        <div th:if="${type}" th:class="|mt-1 alert alert-dismissible fade show alert-${type}|" role="alert">
+            <span th:utext="${message}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <h2>S'inscrire</h2>
+        <!--        Formulaire avec attribut action /login avec méthode post-->
+        <form id="saveUser" th:action="@{/register}" method="post">
+            <div class="form-group">
+                <label for="name">Prénom</label>
+                <input type="text"
+                       th:value="${user.name}"
+                       th:class="|form-control ${#fields.hasErrors('user.name') ? 'is-invalid' : 'is-valid'}|"
+                       id="name"
+                       name="name"
+                       placeholder="Prénom"
+                       class="form-control"
+                >
+                <div class="invalid-feedback">
+                    <ul>
+                        <li th:errors="${user.name}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Champ lastName -->
+            <div class="form-group">
+                <label for="lastName">Nom</label>
+                <input type="text"
+                       th:value="${user.lastName}"
+                       th:class="|form-control ${#fields.hasErrors('user.lastName') ? 'is-invalid' : 'is-valid'}|"
+                       id="lastName"
+                       name="lastName"
+                       placeholder="Nom"
+                       class="form-control"
+                >
+                <div class="invalid-feedback">
+                    <ul>
+                        <li th:errors="${user.lastName}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Champ email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text"
+                       th:value="${user.email}"
+                       th:class="|form-control ${#fields.hasErrors('user.email') ? 'is-invalid' : 'is-valid'}|"
+                       id="email"
+                       name="email"
+                       placeholder="Email"
+                       class="form-control"
+                >
+                <div class="invalid-feedback">
+                    <ul>
+                        <li th:errors="${user.email}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Champ userName -->
+            <div class="form-group">
+                <label for="userName">Nom d'utilisateur</label>
+                <input type="text"
+                       th:value="${user.userName}"
+                       th:class="|form-control ${#fields.hasErrors('user.userName') ? 'is-invalid' : 'is-valid'}|"
+                       id="userName"
+                       name="userName"
+                       placeholder="Nom d'utilisateur"
+                       class="form-control"
+                >
+                <div class="invalid-feedback">
+                    <ul>
+                        <li th:errors="${user.userName}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Champ password -->
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password"
+                       th:value="${user.password}"
+                       th:class="|form-control ${#fields.hasErrors('user.password') ? 'is-invalid' : 'is-valid'}|"
+                       id="password"
+                       name="password"
+                       placeholder="Mot de passe"
+                       class="form-control"
+                >
+                <div class="invalid-feedback">
+                    <ul>
+                        <li th:errors="${user.password}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Inscription</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

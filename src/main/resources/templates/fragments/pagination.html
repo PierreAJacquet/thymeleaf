@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--Fragment pagination-->
+<div th:fragment="pagination" class="row">
+    <div class="col-lg-5">
+        <form action="/" method="get" class="form-inline">
+            <label for="pageSizePicker">Taille des pages&nbsp;</label>
+            <select name="size" id="pageSizePicker" class="custom-select"
+                    onchange="javascript:this.form.submit()">
+                <option th:each="iPage : ${pageSizes}" th:value="${iPage}" th:text="${iPage}" th:selected="${iPage.toString()==size.toString()}"></option>
+            </select>
+            <input type="hidden" name="sortDirection"
+                   th:value="${sortDirection} != null ? ${sortDirection} : ''">
+            <input type="hidden" name="sortProperty"
+                   th:value="${sortProperty} != null ? ${sortProperty}  : ''">
+            <input type="hidden" name="search" th:value="${search} != null ? ${search} : ''">
+            <input type="hidden" name="page" th:value="${page} != null ? ${page} : 0">
+        </form>
+    </div>
+    <div class="col-lg-2 text-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+
+                <li class="page-item disabled" th:if="${communes.isFirst()}">
+                    <a class="page-link" href="#"
+                    >
+                        &laquo;
+                    </a>
+                </li>
+                <li class="page-item" th:unless="${communes.isFirst()}">
+                    <a class="page-link"
+                       th:href="|/?page=${page-1}&search=${search}&size=${size}&sortDirection=${sortDirection}&sortProperty=${sortProperty}|"
+                    >
+                        &laquo;
+                    </a>
+                </li>
+                <li class="page-item">
+                    <form action="/" method="get">
+                        <select name="page" id="pagePicker" class="custom-select"
+                                onchange="javascript:this.form.submit()">
+                            <option th:each="i : ${#numbers.sequence(0, 100)}" th:value="${i}"
+                                    th:text="'Page ' + ${i+1}"
+                                    th:selected="${i==page}"></option>
+                        </select>
+                        <input type="hidden" name="sortDirection"
+                               th:value="${sortDirection} != null ? ${sortDirection} : ''">
+                        <input type="hidden" name="sortProperty"
+                               th:value="${sortProperty} != null ? ${sortProperty} : ''">
+                        <input type="hidden" name="size" th:value="${size} != null ? ${size} : 10">
+                        <input type="hidden" name="search" th:value="${search} != null ? ${search} : ''">
+                    </form>
+                </li>
+                <li class="page-item"> <!--bouton suivant pagination-->
+                    <a class="page-link"
+                       th:href="|/?page=${page+1}&search=${search}&size=${size}&sortDirection=${sortDirection}&sortProperty=${sortProperty}|"
+                    >
+                        &raquo;
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+    <div class="col-lg-5 text-right mt-2">
+        <p>
+            Affichage des communes <span th:text="${start}"></span> à <span th:text="${end}"></span> sur
+            un total de <span th:text="${nbCommunes}"></span>
+        </p>
+    </div>
+</div>
+
+</body>
+
+</html>

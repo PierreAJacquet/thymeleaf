@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Détails de la commune')"></head>
+<!-- On cible l'endroit (arborescence) où se trouve le fragment, on l'insère grâce au :: et on nomme le fragment-->
+<body>
+
+<div th:replace="fragments/header :: navbar"></div>
+
+<div>
+    <div class="container" th:fragment="fragDetail">
+        <div th:if="${type}" th:class="|mt-1 alert alert-dismissible fade show alert-${type}|" role="alert">
+            <span th:utext="${message}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <h2 th:if="${newCommune}">Création d'une nouvelle commune</h2>
+        <h2 th:unless="${newCommune}">Détail de la commune [[${commune.codeInsee}]], [[${commune.nom}]]</h2>
+
+        <div class="row">
+            <div class="col-sm-12 col-lg-6">
+
+                <form id="saveForm" th:action="${newCommune} ? '/communes' : ('/communes/' + ${commune.codeInsee})"
+                      method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <div class="mt-2">
+                        <div>
+                            <div class="form-group">
+                                <label for="codeInsee">Code INSEE</label>
+                                <input type="text" th:value="${commune.codeInsee}"
+                                       th:class="|form-control ${commune.codeInsee != null ? (#fields.hasErrors('commune.codeInsee') ? 'is-invalid' : 'is-valid') : ''}|"
+                                       name="codeInsee"
+                                       id="codeInsee">
+                                <div class="invalid-feedback">
+                                    <ul>
+                                        <li th:errors="${commune.codeInsee}"></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="nom">Nom</label>
+
+                                <input type="text" th:value="${commune.nom}"
+                                       th:class="|form-control ${commune.nom != null ? (#fields.hasErrors('commune.nom') ? 'is-invalid' : 'is-valid') : ''}|"
+                                       name="nom"
+                                       id="nom">
+                                <div class="invalid-feedback">
+                                    <ul>
+                                        <li th:errors="${commune.nom}"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="codePostal">Code Postal</label>
+
+                                <input type="text" th:value="${commune.codePostal}"
+                                       th:class="|form-control ${commune.codePostal != null ? (#fields.hasErrors('commune.codePostal') ? 'is-invalid' : 'is-valid') : ''}|"
+                                       name="codePostal"
+                                       id="codePostal">
+                                <div class="invalid-feedback">
+                                    <ul>
+                                        <li th:errors="${commune.codePostal}"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="latitude">Latitude</label>
+
+                                <input type="text" th:value="${commune.latitude}"
+                                       th:class="|form-control ${commune.latitude != null ? (#fields.hasErrors('commune.latitude') ? 'is-invalid' : 'is-valid') : ''}|"
+                                       name="latitude"
+                                       id="latitude">
+                                <div class="invalid-feedback">
+                                    <ul>
+                                        <li th:errors="${commune.latitude}"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="longitude">Longitude</label>
+
+                                <input type="text" th:value="${commune.longitude}"
+                                       th:class="|form-control ${commune.longitude != null ? (#fields.hasErrors('commune.longitude') ? 'is-invalid' : 'is-valid') : ''}|"
+                                       name="longitude"
+                                       id="longitude">
+                                <div class="invalid-feedback">
+                                    <ul>
+                                        <li th:errors="${commune.longitude}"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mt-2 text-center" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <div class="col-sm-12 mt-2 text-center">
+                            <input form="saveForm" class="btn btn-primary" type="submit" value="Enregistrer"/>
+                            <span th:unless="${newCommune}">
+                                <a th:href="|/communes/${commune.codeInsee}/delete|"
+                                   class="btn btn-danger">Supprimer</a>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--
+                        <div class="col-lg-6" th:if="${commune.newCommune} == false && ${commune.longitude} != null && ${commune.latitude} != null">
+            -->
+            <div class="col-lg-6"
+                 th:unless="${param.newCommune} or ${commune.longitude} == null or ${commune.latitude} == null">
+                <iframe width="650" height="450" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                        th:src="|https://www.openstreetmap.org/export/embed.html?bbox=${commune.longitude-0.10}%2C${commune.latitude-0.5}%2C${commune.longitude+0.10}%2C${commune.latitude+0.5}&layer=mapnik&marker=${commune.latitude}%2C${commune.longitude}|"
+                        style="border: 1px solid black"></iframe>
+            </div>
+            <div class="col-sm-12 text-center mt-2" th:unless="${newCommune}">
+                <form th:action="|/communes/${commune.codeInsee}|" method="get" class="form-inline mb-2">
+                    <label for="perimetre">Communes dans un périmètre de&nbsp;</label>
+                    <div class="input-group input-group-sm">
+                        <input type="number" name="perimetre" id="perimetre" class="form-control"
+                               th:value="${perimetre}">
+                        <div class="input-group-append">
+                            <span class="input-group-text">km</span>
+                        </div>
+                    </div>
+                    <input class="btn btn-outline-primary btn-sm float-right" type="submit" value="Rechercher"/>
+                </form>
+            </div>
+            <div class="col-sm-6" th:unless="${newCommune}">
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="communeProche : ${communesProches}">
+                        <a th:href="|/communes/${communeProche.codeInsee}|">
+                            [[${communeProche.nom}]] ([[${communeProche.codePostal}]])
+                            <span class="badge badge-primary float-right">
+                                [[${communeProche.getDistance(commune.latitude, commune.longitude)}]] km
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
